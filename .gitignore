@@ -1,0 +1,15 @@
+venv
+*.pyc
+*.egg-info
+__pycache__
+.cache
+.coverage
+coverage*.xml
+junit*.xml
+pylama*.ini
+tox*.ini
+build
+dist
+sdist
+target
+.pytest_cache/

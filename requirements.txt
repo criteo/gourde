@@ -1,0 +1,12 @@
+uWSGI
+Flask
+prometheus_client
+prometheus-flask-exporter
+
+# For exception handling.
+blinker
+raven
+
+# To get a real wsgi container.
+flask-twisted
+twisted
