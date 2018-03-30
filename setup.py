@@ -51,7 +51,7 @@ setuptools.setup(
     description="Flask(-Twisted) microframework for microservices with Prometheus and Sentry support.",
     license="Apache 2",
     keywords="flask twisted microframework microservice prometheus sentry",
-    url="http://example.com/HelloWorld/",  # project home page, if any
+    url="https://github.com/criteo/gourde/",
     project_urls={
         "Source Code": "https://github.com/criteo/gourde/",
     },
