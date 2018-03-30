@@ -2,7 +2,9 @@ include MANIFEST.in
 
 # These files are referenced from setup.py so we must make sure
 # of including them in the source distribution.
+include README.md
 include requirements.txt tests-requirements.txt
 
-include jiralerts/favicon.ico
-recursive-include jiralerts/templates *.tmpl
+include example/static/favicon.ico
+recursive-include example/templates *.tmpl
+recursive-include gourde/templates *.tmpl

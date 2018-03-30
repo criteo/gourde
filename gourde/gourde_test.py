@@ -17,7 +17,8 @@ class GourdeTest(unittest.TestCase):
 
     def test_basic(self):
         """Create a gourde from a name."""
-        g = gourde.Gourde(__name__, args=self.args, registry=self.registry)
+        g = gourde.Gourde(__name__, registry=self.registry)
+        g.setup(self.args)
         self.assertIsNotNone(g)
         self.assertTrue(g.is_healthy())
         self.assertTrue(g.is_ready())
@@ -26,7 +27,8 @@ class GourdeTest(unittest.TestCase):
     def test_flask(self):
         """Create a gourde with a flask."""
         app = flask.Flask(__name__)
-        g = gourde.Gourde(app, args=self.args, registry=self.registry)
+        g = gourde.Gourde(app, registry=self.registry)
+        g.setup(self.args)
         self.assertIsNotNone(g)
 
     # TODO:
