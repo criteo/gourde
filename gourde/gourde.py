@@ -106,9 +106,12 @@ class Gourde(object):
         self.app.logger.setLevel(logging.getLevelName(log_level))
         self.app.logger.info("Logging initialized.")
 
-    def setup_prometheus(self, registry):
+    def setup_prometheus(self, registry=None):
         """Setup Prometheus."""
-        self.metrics = PrometheusMetrics(self.app, registry=registry)
+        kwargs = {}
+        if registry:
+            kwargs['registry'] = registry
+        self.metrics = PrometheusMetrics(self.app, **kwargs)
         try:
             version = pkg_resources.require(self.app.name)[0].version
         except pkg_resources.DistributionNotFound:
