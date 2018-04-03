@@ -21,13 +21,14 @@ class Error(Exception):
 # Initialize flask by ourselves.
 app = flask.Flask(__name__)
 
-# Setup our wrapper.
-gourde = Gourde(app)
-
-
+# This needs to go first to have priority over
+# the default routes.
 @app.route('/example')
 def index():
     return 'Example'
+
+# Setup our wrapper.
+gourde = Gourde(app)
 
 
 def main():
