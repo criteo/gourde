@@ -52,11 +52,11 @@ class Gourde(object):
         self.metrics = None
         self.is_setup = False
 
-        self.add_url_rule('/', 'status', self.status)
-        self.add_url_rule('/-/healthy', 'health', self.healthy)
-        self.add_url_rule('/-/ready', 'ready', self.ready)
+        self.add_url_rule('/', '__status', self.status)
+        self.add_url_rule('/-/healthy', '__health', self.healthy)
+        self.add_url_rule('/-/ready', '__ready', self.ready)
         if self.app.has_static_folder:
-            self.add_url_rule('/favicon.ico', 'favicon', self.favicon)
+            self.add_url_rule('/favicon.ico', '__favicon', self.favicon)
 
         self.setup_prometheus(registry)
         self.setup_sentry(sentry_dsn=None)
