@@ -61,7 +61,7 @@ class Gourde(object):
         self.setup_prometheus(registry)
         self.setup_sentry(sentry_dsn=None)
 
-    def setup(self, args):
+    def setup(self, args=None):
         if args is None:
             parser = self.get_argparser()
             args = parser.parse_args()

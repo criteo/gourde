@@ -18,6 +18,7 @@ class GourdeTest(unittest.TestCase):
     def test_basic(self):
         """Create a gourde from a name."""
         g = gourde.Gourde(__name__, registry=self.registry)
+        g.setup()
         g.setup(self.args)
         self.assertIsNotNone(g)
         self.assertTrue(g.is_healthy())
