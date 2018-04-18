@@ -6,8 +6,6 @@ matrix:
       env: TOXENV=py35-coverage
     - python: '3.6'
       env: TOXENV=py36-coverage
-    - python: '3.6'
-      env: TOXENV=pylama
 
 install:
   - pip install tox coveralls

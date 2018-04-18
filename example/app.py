@@ -18,19 +18,29 @@ class Error(Exception):
 
 # More complicated example:
 
-# Initialize flask by ourselves.
-app = flask.Flask(__name__)
+gourde = Gourde(__name__)
+app = gourde.app
 
 
-# This needs to go first to have priority over
-# the default routes.
-@app.route('/example')
+# Override the default index
+@app.route('/')
 def index():
-    return 'Example'
+    return flask.render_template('index.html')
 
 
-# Setup our wrapper.
-gourde = Gourde(app)
+# Add a new page.
+@app.route('/example')
+def example():
+    return flask.render_template('example.html')
+
+
+# Create a custom health check callbback.
+def is_healthy():
+    """Custom "health" check."""
+    import random
+    if random.random() > 0.5:
+        raise Error()
+    return True
 
 
 def main():
@@ -42,15 +52,8 @@ def main():
     # Setup gourde with the args.
     gourde.setup(args)
 
-    def _is_healthy():
-        """Custom "health" check."""
-        import random
-        if random.random() > 0.5:
-            raise Error()
-        return True
-
     # Register a custom health check.
-    gourde.is_healthy = _is_healthy
+    gourde.is_healthy = is_healthy
 
     # Start the application.
     gourde.run()
