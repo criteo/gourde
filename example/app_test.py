@@ -1,4 +1,6 @@
 import unittest
+
+from gourde import testutils
 from example import app
 
 
@@ -6,7 +8,7 @@ class AppTest(unittest.TestCase):
     """Very basic tests."""
 
     def setUp(self):
-        app.gourde.setup()  # This is unfortunately still necessary.
+        testutils.setup(app.gourde)
         self.app = app.app.test_client()
 
     def test_views(self):

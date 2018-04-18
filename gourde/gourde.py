@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+"""Microframework for Flask."""
 
 import argparse
 import flask
