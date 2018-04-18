@@ -43,7 +43,10 @@ class Gourde(object):
             # Convenience constructor.
             self.app = flask.Flask(app_or_name)
 
-        self.host = '127.0.0.1'
+        # The blueprints with our views.
+        self.blueprint = flask.Blueprint('gourde', __name__, template_folder='templates')
+
+        self.host = '0.0.0.0'
         self.port = 8080
         self.debug = False
         self.log_level = None
@@ -52,16 +55,30 @@ class Gourde(object):
         self.metrics = None
         self.is_setup = False
 
-        self.add_url_rule('/', '__status', self.status)
-        self.add_url_rule('/-/healthy', '__health', self.healthy)
-        self.add_url_rule('/-/ready', '__ready', self.ready)
-        if self.app.has_static_folder:
-            self.add_url_rule('/favicon.ico', '__favicon', self.favicon)
-
+        self.setup_blueprint()
         self.setup_prometheus(registry)
         self.setup_sentry(sentry_dsn=None)
 
+    def setup_blueprint(self):
+        """Initialize the blueprint."""
+
+        # Register endpoints.
+        self.blueprint.add_url_rule('/', 'status', self.status)
+        self.blueprint.add_url_rule('/healthy', 'health', self.healthy)
+        self.blueprint.add_url_rule('/ready', 'ready', self.ready)
+        self.blueprint.add_url_rule('/threads', 'threads', self.threads_bt)
+
+    def _add_routes(self):
+        """Add some nice default routes."""
+        if self.app.has_static_folder:
+            self.add_url_rule('/favicon.ico', 'favicon', self.favicon)
+        self.add_url_rule('/', '__default_redirect_to_status', self.redirect_to_status)
+
     def setup(self, args=None):
+        if self.is_setup:
+            return
+
+        # Args.
         if args is None:
             parser = self.get_argparser()
             args = parser.parse_args()
@@ -72,6 +89,17 @@ class Gourde(object):
         self.twisted = args.twisted
         self.threads = args.threads
         self.setup_logging(self.log_level)
+
+        # Flask things
+        self._add_routes()
+        self.app.register_blueprint(self.blueprint, url_prefix='/-')
+
+        def _context():
+            return {'gourde': self}
+
+        # Add 'gourde' to the context.
+        self.app.context_processor(_context)
+
         self.is_setup = True
 
     @staticmethod
@@ -137,8 +165,17 @@ class Gourde(object):
         """
         self.app.add_url_rule(route, endpoint, handler)
 
+    @property
+    def name(self):
+        """Return the name of the current application."""
+        return self.app.import_name
+
+    def redirect_to_status(self):
+        """Redirect to the gourde index."""
+        return flask.redirect(flask.url_for('gourde.status'))
+
     def status(self):
-        return 'status'
+        return flask.render_template('gourde/status.html')
 
     def is_healthy(self):
         return True
@@ -154,7 +191,7 @@ class Gourde(object):
             else:
                 return 'FAIL', 500
         except Exception as e:
-            self.app.logger.exception()
+            self.app.logger.exception(e)
             return str(e), 500
 
     def is_ready(self):
@@ -174,6 +211,21 @@ class Gourde(object):
             self.app.logger.exception()
             return str(e), 500
 
+    def threads_bt(self):
+        """Display thread backtraces."""
+        import threading
+        import traceback
+
+        threads = {}
+        for thread in threading.enumerate():
+            frames = sys._current_frames().get(thread.ident)
+            if frames:
+                stack = traceback.format_stack(frames)
+            else:
+                stack = []
+            threads[thread] = ''.join(stack)
+        return flask.render_template('gourde/threads.html', threads=threads)
+
     def favicon(self):
         return flask.send_from_directory(
             self.app.static_folder,
@@ -185,6 +237,7 @@ class Gourde(object):
         """Run the application."""
         if not self.is_setup:
             self.setup()
+
         if not self.twisted:
             self.run_with_werkzeug(**options)
         else:

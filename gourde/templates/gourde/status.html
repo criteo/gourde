@@ -1,0 +1,14 @@
+{% extends "gourde/_base.html" %}
+
+{% block title %}{{ gourde.name }}{% endblock %}
+
+{% block content %}
+    <h1>{{ gourde.name }}</h1>
+{% if gourde.debug %}
+<pre>{{ app }}</pre>
+
+<pre>{{ config }}</pre>
+
+<pre>{{ request }}</pre>
+{% endif %}
+{% endblock %}

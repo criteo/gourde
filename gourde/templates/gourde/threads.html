@@ -1,0 +1,17 @@
+{% extends "gourde/_base.html" %}
+
+{% block title %}threads{% endblock %}
+
+{% block content %}
+    <h1>Threads</h1>
+    <div class="row">
+        {% for thread, stack in threads.items() %}
+            <div class="card">
+                <h3 class="card-header">{{ thread }}</h3>
+                <div class="card-body">
+                    <pre>{{ stack }}</pre>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
