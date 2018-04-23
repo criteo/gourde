@@ -33,4 +33,4 @@ if __name__ == '__main__':
     main()
 ```
 
-Want to know more? Look at [example/app.py](example/app.py).
+Want to know more? Look at [example/app.py](example/app.py), you can run it with `gourde-example`.
