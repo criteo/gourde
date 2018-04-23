@@ -27,8 +27,8 @@ class Gourde(object):
     """Wrapper around Flask."""
 
     LOG_FORMAT = (
-        '[%(asctime)s] %(levelname)s %(module)s '
-        '[%(filename)s:%(funcName)s:%(lineno)d] (%(thread)d): %(message)s'
+        "[%(asctime)s] %(levelname)s %(module)s "
+        "[%(filename)s:%(funcName)s:%(lineno)d] (%(thread)d): %(message)s"
     )
 
     def __init__(self, app_or_name, registry=None):
@@ -44,9 +44,11 @@ class Gourde(object):
             self.app = flask.Flask(app_or_name)
 
         # The blueprints with our views.
-        self.blueprint = flask.Blueprint('gourde', __name__, template_folder='templates')
+        self.blueprint = flask.Blueprint(
+            "gourde", __name__, template_folder="templates"
+        )
 
-        self.host = '0.0.0.0'
+        self.host = "0.0.0.0"
         self.port = 8080
         self.debug = False
         self.log_level = None
@@ -63,16 +65,16 @@ class Gourde(object):
         """Initialize the blueprint."""
 
         # Register endpoints.
-        self.blueprint.add_url_rule('/', 'status', self.status)
-        self.blueprint.add_url_rule('/healthy', 'health', self.healthy)
-        self.blueprint.add_url_rule('/ready', 'ready', self.ready)
-        self.blueprint.add_url_rule('/threads', 'threads', self.threads_bt)
+        self.blueprint.add_url_rule("/", "status", self.status)
+        self.blueprint.add_url_rule("/healthy", "health", self.healthy)
+        self.blueprint.add_url_rule("/ready", "ready", self.ready)
+        self.blueprint.add_url_rule("/threads", "threads", self.threads_bt)
 
     def _add_routes(self):
         """Add some nice default routes."""
         if self.app.has_static_folder:
-            self.add_url_rule('/favicon.ico', 'favicon', self.favicon)
-        self.add_url_rule('/', '__default_redirect_to_status', self.redirect_to_status)
+            self.add_url_rule("/favicon.ico", "favicon", self.favicon)
+        self.add_url_rule("/", "__default_redirect_to_status", self.redirect_to_status)
 
     def setup(self, args=None):
         if self.is_setup:
@@ -92,10 +94,10 @@ class Gourde(object):
 
         # Flask things
         self._add_routes()
-        self.app.register_blueprint(self.blueprint, url_prefix='/-')
+        self.app.register_blueprint(self.blueprint, url_prefix="/-")
 
         def _context():
-            return {'gourde': self}
+            return {"gourde": self}
 
         # Add 'gourde' to the context.
         self.app.context_processor(_context)
@@ -106,17 +108,30 @@ class Gourde(object):
     def get_argparser(parser=None):
         """Customize a parser to get the correct options."""
         parser = parser or argparse.ArgumentParser()
-        parser.add_argument('--host', help='Host listen address')
+        parser.add_argument("--host", help="Host listen address")
+        parser.add_argument("--port", "-p", default=9050, help="Listen port", type=int)
         parser.add_argument(
-            '--port', '-p', default=9050, help='Listen port', type=int)
+            "--debug",
+            "-d",
+            default=False,
+            action="store_true",
+            help="Enable debug mode",
+        )
         parser.add_argument(
-            '--debug', '-d', default=False, action='store_true', help='Enable debug mode')
+            "--log-level",
+            "-l",
+            default="INFO",
+            help="Log Level, empty string to disable.",
+        )
         parser.add_argument(
-            '--log-level', '-l', default='INFO', help='Log Level, empty string to disable.')
+            "--twisted",
+            default=False,
+            action="store_true",
+            help="Use twisted to server requests.",
+        )
         parser.add_argument(
-            '--twisted', default=False, action='store_true', help='Use twisted to server requests.')
-        parser.add_argument(
-            '--threads', default=None, help='Number of threads to use.', type=int)
+            "--threads", default=None, help="Number of threads to use.", type=int
+        )
         return parser
 
     def setup_logging(self, log_level):
@@ -125,7 +140,7 @@ class Gourde(object):
             return
 
         # Remove existing logger.
-        self.app.config['LOGGER_HANDLER_POLICY'] = 'never'
+        self.app.config["LOGGER_HANDLER_POLICY"] = "never"
         self.app.logger.propagate = True
 
         handler = logging.StreamHandler()
@@ -138,18 +153,19 @@ class Gourde(object):
         """Setup Prometheus."""
         kwargs = {}
         if registry:
-            kwargs['registry'] = registry
+            kwargs["registry"] = registry
         self.metrics = PrometheusMetrics(self.app, **kwargs)
         try:
             version = pkg_resources.require(self.app.name)[0].version
         except pkg_resources.DistributionNotFound:
-            version = 'unknown'
+            version = "unknown"
         self.metrics.info(
-            'app_info', 'Application info', version=version, appname=self.app.name)
+            "app_info", "Application info", version=version, appname=self.app.name
+        )
         self.app.logger.info("Prometheus is enabled.")
 
     def setup_sentry(self, sentry_dsn):
-        sentry_dsn = sentry_dsn or os.getenv('SENTRY_DSN', None)
+        sentry_dsn = sentry_dsn or os.getenv("SENTRY_DSN", None)
         if not Sentry or not sentry_dsn:
             return
 
@@ -172,10 +188,10 @@ class Gourde(object):
 
     def redirect_to_status(self):
         """Redirect to the gourde index."""
-        return flask.redirect(flask.url_for('gourde.status'))
+        return flask.redirect(flask.url_for("gourde.status"))
 
     def status(self):
-        return flask.render_template('gourde/status.html')
+        return flask.render_template("gourde/status.html")
 
     def is_healthy(self):
         return True
@@ -187,9 +203,11 @@ class Gourde(object):
         """
         try:
             if self.is_healthy():
-                return 'OK', 200
+                return "OK", 200
+
             else:
-                return 'FAIL', 500
+                return "FAIL", 500
+
         except Exception as e:
             self.app.logger.exception(e)
             return str(e), 500
@@ -204,9 +222,11 @@ class Gourde(object):
         """
         try:
             if self.is_ready():
-                return 'OK', 200
+                return "OK", 200
+
             else:
-                return 'FAIL', 500
+                return "FAIL", 500
+
         except Exception as e:
             self.app.logger.exception()
             return str(e), 500
@@ -223,14 +243,12 @@ class Gourde(object):
                 stack = traceback.format_stack(frames)
             else:
                 stack = []
-            threads[thread] = ''.join(stack)
-        return flask.render_template('gourde/threads.html', threads=threads)
+            threads[thread] = "".join(stack)
+        return flask.render_template("gourde/threads.html", threads=threads)
 
     def favicon(self):
         return flask.send_from_directory(
-            self.app.static_folder,
-            'favicon.ico',
-            mimetype='image/vnd.microsoft.icon'
+            self.app.static_folder, "favicon.ico", mimetype="image/vnd.microsoft.icon"
         )
 
     def run(self, **options):
@@ -246,8 +264,13 @@ class Gourde(object):
     def run_with_werkzeug(self, **options):
         """Run with werkzeug simple wsgi container."""
         threaded = self.threads is not None and (self.threads > 0)
-        self.app.run(host=self.host, port=self.port,
-                     debug=self.debug, threaded=threaded, **options)
+        self.app.run(
+            host=self.host,
+            port=self.port,
+            debug=self.debug,
+            threaded=threaded,
+            **options
+        )
 
     def run_with_twisted(self, **options):
         """Run with twisted."""
@@ -260,5 +283,4 @@ class Gourde(object):
             reactor.suggestThreadPoolSize(self.threads)
         if self.log_level:
             log.startLogging(sys.stderr)
-        twisted.run(
-            host=self.host, port=self.port, debug=self.debug, **options)
+        twisted.run(host=self.host, port=self.port, debug=self.debug, **options)

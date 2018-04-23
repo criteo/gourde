@@ -30,9 +30,10 @@ class GourdeTest(unittest.TestCase):
         testutils.setup(g)
         self.assertIsNotNone(g)
 
-    # TODO:
-    # - Test default handlers.
+
+# TODO:
+# - Test default handlers.
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

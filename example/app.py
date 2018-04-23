@@ -30,30 +30,40 @@ app = gourde.app
 
 
 # Override the default index
-@app.route('/')
+
+
+@app.route("/")
 def index():
-    return flask.render_template('index.html')
+    return flask.render_template("index.html")
 
 
 # Add a new page.
-@app.route('/example')
+
+
+@app.route("/example")
 def example():
-    return flask.render_template('example.html')
+    return flask.render_template("example.html")
 
 
 # Create a custom health check callbback.
+
+
 def is_healthy():
     """Custom "health" check."""
     import random
+
     if random.random() > 0.5:
         raise Error()
+
     return True
 
 
 if flask_restplus:
+
     class HelloWorld(flask_restplus.Resource):
+
         def get(self):
-            return {'hello': 'world'}
+            return {"hello": "world"}
 
 
 def initialize_api(flask_app):
@@ -61,10 +71,10 @@ def initialize_api(flask_app):
     if not flask_restplus:
         return
 
-    api = flask_restplus.Api(version='1.0', title='My Example API')
-    api.add_resource(HelloWorld, '/hello')
+    api = flask_restplus.Api(version="1.0", title="My Example API")
+    api.add_resource(HelloWorld, "/hello")
 
-    blueprint = flask.Blueprint('api', __name__, url_prefix='/api')
+    blueprint = flask.Blueprint("api", __name__, url_prefix="/api")
     api.init_app(blueprint)
     flask_app.register_blueprint(blueprint)
 
@@ -83,7 +93,7 @@ def initialize_app(flask_app, args):
 
 def main():
     # Setup a custom parser.
-    parser = argparse.ArgumentParser(description='Example')
+    parser = argparse.ArgumentParser(description="Example")
     parser = Gourde.get_argparser(parser)
     args = parser.parse_args()
 
