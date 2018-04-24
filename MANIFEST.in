@@ -6,5 +6,5 @@ include README.md
 include requirements.txt tests-requirements.txt
 
 include example/static/favicon.ico
-recursive-include example/templates *.tmpl
-recursive-include gourde/templates *.tmpl
+recursive-include example/templates *.html
+recursive-include gourde/templates *.html
