@@ -108,7 +108,7 @@ class Gourde(object):
     def get_argparser(parser=None):
         """Customize a parser to get the correct options."""
         parser = parser or argparse.ArgumentParser()
-        parser.add_argument("--host", help="Host listen address")
+        parser.add_argument("--host", default="0.0.0.0", help="Host listen address")
         parser.add_argument("--port", "-p", default=9050, help="Listen port", type=int)
         parser.add_argument(
             "--debug",
