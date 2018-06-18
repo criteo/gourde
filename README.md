@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/criteo/gourde.svg?branch=master)](https://travis-ci.org/criteo/gourde)
 [![Coverage Status](https://coveralls.io/repos/github/criteo/gourde/badge.svg)](https://coveralls.io/github/criteo/gourde?branch=master)
-[![Dependency Status](https://gemnasium.com/badges/github.com/criteo/gourde.svg)](https://gemnasium.com/github.com/criteo/gourde)
 [![PyPI version](https://badge.fury.io/py/gourde.svg)](https://badge.fury.io/py/gourde)
 
 Flask(-Twisted) microframework for microservices with Prometheus and Sentry support.
