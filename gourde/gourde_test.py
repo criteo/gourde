@@ -1,4 +1,6 @@
 """Gourde unit tests."""
+
+from __future__ import absolute_import
 import unittest
 import flask
 import prometheus_client
