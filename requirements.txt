@@ -1,4 +1,3 @@
-uWSGI
 Flask
 prometheus_client
 prometheus-flask-exporter
