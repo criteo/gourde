@@ -9,6 +9,7 @@ import sys
 import pkg_resources
 
 from prometheus_flask_exporter import PrometheusMetrics
+from werkzeug.contrib.fixers import ProxyFix
 
 try:
     from raven.contrib.flask import Sentry
@@ -42,6 +43,9 @@ class Gourde(object):
         else:
             # Convenience constructor.
             self.app = flask.Flask(app_or_name)
+            # Most small applications will work behind a reverse proxy and will
+            # need this. If you don't want it, create the app yourself.
+            self.app.wsgi_app = ProxyFix(self.app.wsgi_app)
 
         # The blueprints with our views.
         self.blueprint = flask.Blueprint(
