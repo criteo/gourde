@@ -94,7 +94,8 @@ class Gourde(object):
         self.log_level = args.log_level
         self.twisted = args.twisted
         self.threads = args.threads
-        self.setup_logging(self.log_level)
+        if not args.disable_embedded_logging:
+            self.setup_logging(self.log_level)
 
         # Flask things
         self._add_routes()
@@ -136,6 +137,10 @@ class Gourde(object):
         parser.add_argument(
             "--threads", default=None, help="Number of threads to use.", type=int
         )
+        parser.add_argument("--disable-embedded-logging",
+                            default=False,
+                            action="store_true",
+                            help="Disable embedded logging configuration")
         return parser
 
     def setup_logging(self, log_level):
