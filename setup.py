@@ -26,7 +26,7 @@ try:
     readme = parse_from_file(readme_file)
 except ImportError:
     # m2r may not be installed in user environment
-    with open(readme_file) as f:
+    with open(readme_file, encoding='utf-8') as f:
         readme = f.read()
 
 
