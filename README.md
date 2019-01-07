@@ -9,13 +9,15 @@ Flask(-Twisted) microframework for microservices with Prometheus and Sentry supp
 
 The goal is to remove most of the boilerplate necessary to start a simple HTTP application.
 This provides:
-* Sane arguments (--host, --port, --debug, --log-level)
+
+* Sane arguments (`--host`, `--port`, `--debug`, `--log-level`)
 * Twisted support to have a production ready uwsgi container (`gourde.twisted`, `--twisted`)
 * Prometheus support with default metrics (`gourde.metrics`: See [prometheus_flask_exporter](https://github.com/rycus86/prometheus_flask_exporter))
 * Optional sentry support if the `SENTRY_DSN` env var is set.
 * If you have a 'static' directory in your module, just put a favicon.ico inside!
 
 ## Quick-start
+
 ```python
 from gourde import Gourde
 
