@@ -57,6 +57,7 @@ class Gourde(object):
         self.debug = False
         self.log_level = None
         self.twisted = False
+        self.gunicorn = False
         self.threads = None
         self.metrics = None
         self.is_setup = False
@@ -93,6 +94,7 @@ class Gourde(object):
         self.debug = args.debug
         self.log_level = args.log_level
         self.twisted = args.twisted
+        self.gunicorn = args.gunicorn
         self.threads = args.threads
         if not args.disable_embedded_logging:
             self.setup_logging(self.log_level)
@@ -133,6 +135,12 @@ class Gourde(object):
             default=False,
             action="store_true",
             help="Use twisted to server requests.",
+        )
+        parser.add_argument(
+            "--gunicorn",
+            default=False,
+            action="store_true",
+            help="Use gunicorn to server requests.",
         )
         parser.add_argument(
             "--threads", default=None, help="Number of threads to use.", type=int
@@ -265,10 +273,12 @@ class Gourde(object):
         if not self.is_setup:
             self.setup()
 
-        if not self.twisted:
-            self.run_with_werkzeug(**options)
-        else:
+        if self.twisted:
             self.run_with_twisted(**options)
+        elif self.gunicorn:
+            self.run_with_gunicorn(**options)
+        else:
+            self.run_with_werkzeug(**options)
 
     def run_with_werkzeug(self, **options):
         """Run with werkzeug simple wsgi container."""
@@ -293,3 +303,33 @@ class Gourde(object):
         if self.log_level:
             log.startLogging(sys.stderr)
         twisted.run(host=self.host, port=self.port, debug=self.debug, **options)
+
+    def run_with_gunicorn(self, **options):
+        """Run with gunicorn."""
+        import gunicorn.app.base
+        from gunicorn.six import iteritems
+        import multiprocessing
+
+        class GourdeApplication(gunicorn.app.base.BaseApplication):
+
+            def __init__(self, app, options=None):
+                self.options = options or {}
+                self.application = app
+                super(GourdeApplication, self).__init__()
+
+            def load_config(self):
+                config = dict([(key, value) for key, value in iteritems(self.options)
+                               if key in self.cfg.settings and value is not None])
+                for key, value in iteritems(config):
+                    self.cfg.set(key.lower(), value)
+
+            def load(self):
+                return self.application
+
+        options = {
+            'bind': '%s:%s' % (self.host, self.port),
+            'workers': self.threads or ((multiprocessing.cpu_count() * 2) + 1),
+            'debug': self.debug,
+            **options,
+        }
+        GourdeApplication(self.app, options).run()
