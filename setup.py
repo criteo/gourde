@@ -35,6 +35,10 @@ setuptools.setup(
     version='0.2.1',
     include_package_data=True,
     install_requires=_INSTALL_REQUIRES,
+    extras_require={
+        'twisted': ['flask-twisted', 'twisted'],
+        'gunicorn': ['gunicorn'],
+    },
     dependency_links=_DEPENDENCY_LINKS,
     tests_require=_TEST_REQUIRE,
     entry_points={
@@ -50,7 +54,7 @@ setuptools.setup(
     author_email="c.chary@criteo.com",
     description="Flask(-Twisted) microframework for microservices with Prometheus and Sentry support.",
     license="Apache 2",
-    keywords="flask twisted microframework microservice prometheus sentry",
+    keywords="flask twisted gunicorn microframework microservice prometheus sentry",
     url="https://github.com/criteo/gourde/",
     project_urls={
         "Source Code": "https://github.com/criteo/gourde/",

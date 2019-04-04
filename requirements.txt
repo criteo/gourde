@@ -6,9 +6,5 @@ prometheus-flask-exporter
 blinker
 raven
 
-# To get a real wsgi container.
-flask-twisted
-twisted
-
 # For APIs (optional)
 # flask_restplus
