@@ -32,7 +32,7 @@ except ImportError:
 
 setuptools.setup(
     name='gourde',
-    version='0.3.0',
+    version='0.3.1',
     include_package_data=True,
     install_requires=_INSTALL_REQUIRES,
     extras_require={
