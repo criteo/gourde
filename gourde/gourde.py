@@ -9,7 +9,7 @@ import sys
 import pkg_resources
 
 from prometheus_flask_exporter import PrometheusMetrics
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 try:
     from raven.contrib.flask import Sentry
