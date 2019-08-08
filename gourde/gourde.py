@@ -32,7 +32,7 @@ class Gourde(object):
         "[%(filename)s:%(funcName)s:%(lineno)d] (%(thread)d): %(message)s"
     )
 
-    def __init__(self, app_or_name, registry=None):
+    def __init__(self, app_or_name, registry=None, **kwargs):
         """Build a new Gourde.
 
         Args:
@@ -63,7 +63,10 @@ class Gourde(object):
         self.is_setup = False
 
         self.setup_blueprint()
-        self.setup_prometheus(registry)
+        self.setup_prometheus(
+            registry,
+            **{k[11:]: v for k, v in kwargs.items() if k.startswith("prometheus_")}
+        )
         self.setup_sentry(sentry_dsn=None)
 
     def setup_blueprint(self):
@@ -166,9 +169,8 @@ class Gourde(object):
         self.app.logger.setLevel(logging.getLevelName(log_level))
         self.app.logger.info("Logging initialized.")
 
-    def setup_prometheus(self, registry=None):
+    def setup_prometheus(self, registry=None, **kwargs):
         """Setup Prometheus."""
-        kwargs = {}
         if registry:
             kwargs["registry"] = registry
         self.metrics = PrometheusMetrics(self.app, **kwargs)
