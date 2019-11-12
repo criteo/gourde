@@ -309,8 +309,8 @@ class Gourde(object):
     def run_with_gunicorn(self, **options):
         """Run with gunicorn."""
         import gunicorn.app.base
-        from gunicorn.six import iteritems
         import multiprocessing
+        from six import iteritems
 
         class GourdeApplication(gunicorn.app.base.BaseApplication):
 
