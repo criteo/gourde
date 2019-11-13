@@ -32,7 +32,7 @@ except ImportError:
 
 setuptools.setup(
     name='gourde',
-    version='0.4.0',
+    version='0.5.0',
     include_package_data=True,
     install_requires=_INSTALL_REQUIRES,
     extras_require={
@@ -51,6 +51,7 @@ setuptools.setup(
     # metadata for upload to PyPI
     author="Corentin Chary",
     long_description=readme,
+    long_description_content_type='text/markdown',
     author_email="c.chary@criteo.com",
     description="Flask(-Twisted) microframework for microservices with Prometheus and Sentry support.",
     license="Apache 2",
