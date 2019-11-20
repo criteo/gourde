@@ -4,7 +4,7 @@ prometheus-flask-exporter
 
 # For exception handling.
 blinker
-raven
+sentry-sdk[flask]
 
 # For APIs (optional)
 # flask_restplus

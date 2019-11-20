@@ -11,10 +11,8 @@ import pkg_resources
 from prometheus_flask_exporter import PrometheusMetrics
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-try:
-    from raven.contrib.flask import Sentry
-except ImportError:
-    Sentry = None
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 
 class Error(Exception):
@@ -185,11 +183,13 @@ class Gourde(object):
 
     def setup_sentry(self, sentry_dsn):
         sentry_dsn = sentry_dsn or os.getenv("SENTRY_DSN", None)
-        if not Sentry or not sentry_dsn:
+        if not sentry_dsn:
             return
 
-        sentry = Sentry(dsn=sentry_dsn)
-        sentry.init_app(self.app)
+        sentry_sdk.init(
+            sentry_dsn,
+            integrations=[FlaskIntegration()]
+        )
         self.app.logger.info("Sentry is enabled.")
 
     def add_url_rule(self, route, endpoint, handler):
