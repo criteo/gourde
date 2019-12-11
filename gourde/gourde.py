@@ -169,6 +169,10 @@ class Gourde(object):
 
     def setup_prometheus(self, registry=None, **kwargs):
         """Setup Prometheus."""
+
+        if "group_by" not in kwargs:
+            kwargs["group_by"] = "endpoint"
+
         if registry:
             kwargs["registry"] = registry
         self.metrics = PrometheusMetrics(self.app, **kwargs)
