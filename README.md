@@ -4,6 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/criteo/gourde/badge.svg)](https://coveralls.io/github/criteo/gourde?branch=master)
 [![PyPI version](https://badge.fury.io/py/gourde.svg)](https://badge.fury.io/py/gourde)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/gourde.svg)](https://pypi.python.org/pypi/gourde/)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcriteo%2Fgourde.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcriteo%2Fgourde?ref=badge_shield)
 
 Flask(-Twisted/Gunicorn) microframework for microservices with Prometheus and Sentry support.
 
@@ -46,3 +47,7 @@ if __name__ == '__main__':
 ```
 
 Want to know more? Look at [example/app.py](example/app.py), you can run it with `gourde-example`.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcriteo%2Fgourde.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcriteo%2Fgourde?ref=badge_large)
