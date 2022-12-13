@@ -21,6 +21,15 @@ class Error(Exception):
     pass
 
 
+def url_rule_string(request):  # the Flask request object
+    """Use url rules for metrics path name.
+    :param request This is the Flask Request object.
+
+    :returns A text path which matches a url
+    """
+    return request.url_rule or "<unknown_path>"
+
+
 class Gourde(object):
 
     """Wrapper around Flask."""
@@ -61,10 +70,20 @@ class Gourde(object):
         self.is_setup = False
 
         self.setup_blueprint()
+
+        # This is designed to prevent cardinatlity explosion when metric paths have variables.
+        prometheus_configs = {
+            "group_by": url_rule_string,
+        }
+        prometheus_configs.update(
+            {k[11:]: v for k, v in kwargs.items() if k.startswith("prometheus_")}
+        )
+
         self.setup_prometheus(
             registry,
-            **{k[11:]: v for k, v in kwargs.items() if k.startswith("prometheus_")}
+            **prometheus_configs
         )
+
         self.setup_sentry(sentry_dsn=None)
 
     def setup_blueprint(self):
@@ -171,6 +190,7 @@ class Gourde(object):
         """Setup Prometheus."""
         if registry:
             kwargs["registry"] = registry
+
         self.metrics = PrometheusMetrics(self.app, **kwargs)
         try:
             version = pkg_resources.require(self.app.name)[0].version
