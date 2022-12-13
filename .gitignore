@@ -71,6 +71,7 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+coverage-pylama.xml
 *-coverage.xml
 *,cover
 .hypothesis/
