@@ -1,7 +1,6 @@
 # gourde
-
-[![Build Status](https://travis-ci.org/criteo/gourde.svg?branch=master)](https://travis-ci.org/criteo/gourde)
-[![Coverage Status](https://coveralls.io/repos/github/criteo/gourde/badge.svg)](https://coveralls.io/github/criteo/gourde?branch=master)
+![Build Status](https://github.com/github/docs/actions/workflows/python-package.yml/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/criteo/gourde/badge.svg)](https://coveralls.io/github/criteo/gourde?branch=main)
 [![PyPI version](https://badge.fury.io/py/gourde.svg)](https://badge.fury.io/py/gourde)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/gourde.svg)](https://pypi.python.org/pypi/gourde/)
 
