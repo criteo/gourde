@@ -32,7 +32,7 @@ except ImportError:
 
 setuptools.setup(
     name='gourde',
-    version='0.5.0',
+    version='0.6.0',
     include_package_data=True,
     install_requires=_INSTALL_REQUIRES,
     extras_require={
@@ -49,10 +49,10 @@ setuptools.setup(
     packages=setuptools.find_packages(),
 
     # metadata for upload to PyPI
-    author="Corentin Chary",
+    author="Criteo",
     long_description=readme,
     long_description_content_type='text/markdown',
-    author_email="c.chary@criteo.com",
+    author_email="sre-observability@criteo.com",
     description="Flask(-Twisted) microframework for microservices with Prometheus and Sentry support.",
     license="Apache 2",
     keywords="flask twisted gunicorn microframework microservice prometheus sentry",
@@ -68,6 +68,9 @@ setuptools.setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ],
     # This makes sure the templates are easy to import.
     zip_safe=False,
