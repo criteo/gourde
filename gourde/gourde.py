@@ -6,7 +6,10 @@ import logging
 import os
 import sys
 
-import pkg_resources
+try:
+    from importlib import metadata
+except ImportError:  # for Python<3.8
+    import importlib_metadata as metadata
 
 from prometheus_flask_exporter import PrometheusMetrics
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -193,8 +196,8 @@ class Gourde(object):
 
         self.metrics = PrometheusMetrics(self.app, **kwargs)
         try:
-            version = pkg_resources.require(self.app.name)[0].version
-        except pkg_resources.DistributionNotFound:
+            version = metadata.version(self.app.name)
+        except metadata.PackageNotFoundError:
             version = "unknown"
         self.metrics.info(
             "app_info", "Application info", version=version, appname=self.app.name
